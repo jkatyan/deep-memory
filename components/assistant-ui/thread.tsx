@@ -95,7 +95,7 @@ const ThreadWelcome: FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="aui-thread-welcome-message-motion-1 font-semibold text-2xl"
+            className="aui-thread-welcome-message-motion-1 font-semibold text-2xl dark:text-neutral-50"
           >
             Welcome to Deep Memory!
           </m.div>
@@ -104,7 +104,7 @@ const ThreadWelcome: FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ delay: 0.1 }}
-            className="aui-thread-welcome-message-motion-2 text-2xl text-muted-foreground/65"
+            className="aui-thread-welcome-message-motion-2 text-2xl text-muted-foreground/65 dark:text-neutral-50"
           >
             How can I help you today?
           </m.div>
@@ -158,7 +158,7 @@ const ThreadSuggestions: FC = () => {
               className="aui-thread-welcome-suggestion h-auto w-full flex-1 @md:flex-col flex-wrap items-start justify-start gap-1 rounded-3xl border px-5 py-4 text-left text-sm dark:hover:bg-accent/60"
               aria-label={suggestedAction.action}
             >
-              <span className="aui-thread-welcome-suggestion-text-1 font-medium">
+              <span className="aui-thread-welcome-suggestion-text-1 font-medium dark:text-neutral-50">
                 {suggestedAction.title}
               </span>
               <span className="aui-thread-welcome-suggestion-text-2 text-muted-foreground">
@@ -179,7 +179,7 @@ const Composer: FC = () => {
         <ComposerAttachments />
         <ComposerPrimitive.Input
           placeholder="Send a message..."
-          className="aui-composer-input mb-1 max-h-32 min-h-16 w-full resize-none bg-transparent px-3.5 pt-1.5 pb-3 text-base outline-none placeholder:text-muted-foreground focus-visible:ring-0"
+          className="aui-composer-input mb-1 max-h-32 min-h-16 w-full resize-none bg-transparent px-3.5 pt-1.5 pb-3 text-base outline-none placeholder:text-muted-foreground focus-visible:ring-0 dark:text-neutral-100"
           rows={1}
           autoFocus
           aria-label="Message input"
