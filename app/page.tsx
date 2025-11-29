@@ -4,17 +4,60 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useForm } from "@tanstack/react-form"
+import * as z from "zod"
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner";
+import { uuid } from "@tanstack/react-form";
 
 export default function Home() {
   const router = useRouter()
 
+  const formSchema = z.object({
+    openAi: z
+      .string()
+      .length(1),
+    // .length(43),
+    pinecone: z
+      .string()
+      .length(1),
+    // .length(75),
+    awsAccess: z.string().nonempty(),
+    awsSecret: z.string().nonempty(),
+    awsBucketName: z.string().nonempty()
+  })
+
+  const form = useForm({
+    defaultValues: {
+      openAi: "",
+      pinecone: "",
+      awsAccess: "",
+      awsSecret: "",
+      awsBucketName: ""
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      let response = await fetch("/api/credentials", { method: "POST", body: JSON.stringify(value) })
+      let json = await response.json()
+      console.log(json)
+      if (json.statusCode == 200) {
+        toast.success("Success! Routing to main app")
+        localStorage.setItem("uuid", json["data"]["uuid"])
+        router.push("/chat")
+      }
+      else {
+        toast.error("Something went wrong. Please try again")
+      }
+    }
+  })
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    router.push("/chat");
+    form.handleSubmit()
   }
-
 
   return (
     <main className="flex flex-col justify-center items-center h-screen dark:bg-black">
@@ -25,68 +68,172 @@ export default function Home() {
         <FieldGroup>
           <FieldSet>
             <FieldLegend>Deep Memory Setup</FieldLegend>
-            <FieldDescription>
-              All keys are stored in local storage and only used when necessary
-            </FieldDescription>
           </FieldSet>
-          <Field>
-            <FieldLabel htmlFor="openapi-7j9-api-key-43j">
-              OpenAI API Key
-            </FieldLabel>
-            <Input
-              id="openapi-7j9-api-key-43j"
-              placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-              required
-            />
-            <FieldError />
-          </Field>
+          {
+            form.Field({
+              name: "openAi",
+              children: (field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
 
-          <Field>
-            <FieldLabel htmlFor="pinecone-9qr-api-key-71z">
-              Pinecone API Key
-            </FieldLabel>
-            <Input
-              id="pinecone-9qr-api-key-71z"
-              placeholder="pcsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-              required
-            />
-          </Field>
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      OpenAI API Key
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      data-invalid={isInvalid ? "true" : undefined}
+                      placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              },
+            })
+          }
 
-          <Field>
-            <FieldLabel htmlFor="aws-w7r-access-key-k6u">
-              AWS Access Key
-            </FieldLabel>
-            <Input
-              id="aws-w7r-access-key-k6u"
-              required
-            />
-          </Field>
+          {
+            form.Field({
+              name: "pinecone",
+              children: (field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
 
-          <Field>
-            <FieldLabel htmlFor="aws-h4n-secret-access-key-z1c">
-              AWS Secret Key
-            </FieldLabel>
-            <Input
-              id="aws-h4n-secret-access-key-z1c"
-              required
-            />
-          </Field>
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      Pinecone API Key
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      data-invalid={isInvalid ? "true" : undefined}
+                      placeholder="pcsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              },
+            })
+          }
 
-          <Field>
-            <FieldLabel htmlFor="aws-r9t-bucket-name-m7b">
-              AWS Bucket Name
-            </FieldLabel>
-            <Input
-              id="aws-r9t-bucket-name-m7b"
-              required
-            />
-          </Field>
+
+          {
+            form.Field({
+              name: "awsAccess",
+              children: (field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      AWS Access Key
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      data-invalid={isInvalid ? "true" : undefined}
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              },
+            })
+          }
+
+          {
+            form.Field({
+              name: "awsSecret",
+              children: (field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      AWS Secret Key
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      data-invalid={isInvalid ? "true" : undefined}
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              },
+            })
+          }
+
+          {
+            form.Field({
+              name: "awsBucketName",
+              children: (field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      AWS Bucket Name
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      data-invalid={isInvalid ? "true" : undefined}
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              },
+            })
+          }
 
           <Field orientation="horizontal">
             <Button type="submit">Submit</Button>
           </Field>
         </FieldGroup>
       </form>
+
+      <Toaster />
     </main>
   )
 }
