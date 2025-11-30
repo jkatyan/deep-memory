@@ -3,6 +3,7 @@ import json
 import sys
 import redis
 import uuid
+import os
 from textwrap import dedent
 from deep_memory import DeepMemory
 
@@ -11,7 +12,10 @@ from deep_memory import DeepMemory
 # Initialize Flask app and Redis client
 #=======================================================================
 app = Flask(__name__)
-r = redis.Redis(host="localhost", port=6379, db=0)
+
+# Connect to Redis using Vercel
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+r = redis.from_url(redis_url, decode_responses=True)
 
 # Dictionary of user DeepMemory instances
 deep_memory_instances = {}
@@ -61,8 +65,9 @@ def call_chatgpt():
     user_id = str(json_obj.get('id'))
     research_enabled = metadata.get('isResearchEnabled', False)
     memorize_enabled = metadata.get('isMemorizeEnabled', False)
-    raw = r.hgetall(user_id)
-    credentials = {k.decode(): v.decode() for k, v in raw.items()}
+    
+    # Get credentials from Redis
+    credentials = r.hgetall(user_id)
 
     # Get DeepMemory instance for user
     dm = get_deep_memory(
@@ -122,7 +127,7 @@ def post_credentials():
     id = str(uuid.uuid4())
     json_obj = json.loads(decoded)
 
-    r.hmset(id, json_obj)
+    r.hset(id, mapping=json_obj)
 
     res = {"uuid": id}
     return jsonify(isError=False, message="Success", statusCode=200, data=res), 200
