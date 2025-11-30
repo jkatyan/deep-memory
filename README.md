@@ -1,78 +1,175 @@
-<p align="center">
-  <a href="https://nextjs-flask-starter.vercel.app/">
-    <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
-    <h3 align="center">Next.js Flask Starter</h3>
-  </a>
-</p>
+# Deep Memory
 
-<p align="center">Simple Next.js boilerplate that uses <a href="https://flask.palletsprojects.com/">Flask</a> as the API backend.</p>
+An agentic long-term memory system for language models that enables AI assistants to store, retrieve, and intelligently process conversational context across sessions.
 
-<br/>
+**Live Demo:** https://deep-memory.vercel.app/
 
-## Introduction
+---
 
-This is a hybrid Next.js + Python app that uses Next.js as the frontend and Flask as the API backend. One great use case of this is to write Next.js apps that use Python AI libraries on the backend.
+## Overview
+
+Deep Memory extends language models beyond single-session context windows by providing persistent memory capabilities. Unlike traditional memory systems that compress information ahead-of-time (AOT), Deep Memory follows a **just-in-time (JIT) compilation** approach: it maintains complete conversation history in a searchable page-store while performing intensive "deep research" at query time to retrieve and synthesize exactly the information needed.
+
+This design avoids the information loss inherent in pre-compressed memory systems, enabling high-fidelity retrieval and task-adaptive context generation.
+
+---
+
+## Architecture
+
+Deep Memory implements a dual-agent framework with four specialized components:
+
+### Memorizer Agent
+
+Processes conversations into two complementary forms:
+
+**Lightweight Memory**
+- Generates concise abstracts highlighting key information from each session
+- Enables fast preliminary searches across conversation history
+
+**Complete Page-Store**
+- Preserves full conversation content with contextual headers
+- Ensures accurate retrieval without information loss
+
+**Storage Implementation**
+- Four Pinecone indexes for multi-modal search
+- Dense indexes using semantic embeddings (text-embed-v2)
+- Sparse indexes using keyword matching (pinecone-sparse-english-v0)
+
+### Researcher Agent
+
+Performs deep research through three phases:
+
+**Planning**
+- Analyzes queries and existing memory to determine information needs
+- Selects optimal search strategies (keyword, vector, hybrid, or image)
+
+**Searching**
+- Executes planned searches in parallel across the page-store
+- Retrieves relevant conversations using multiple search modalities
+
+**Integration**
+- Synthesizes retrieved information into coherent factual summaries
+- Filters and combines facts from multiple sources
+
+---
 
 ## How It Works
 
-The Python/Flask server is mapped into to Next.js app under `/api/`.
+### Deep Research Process
 
-This is implemented using [`next.config.js` rewrites](https://github.com/vercel/examples/blob/main/python/nextjs-flask/next.config.js) to map any request to `/api/:path*` to the Flask API, which is hosted in the `/api` folder.
+When Research is enabled, the system performs intensive just-in-time retrieval:
 
-On localhost, the rewrite will be made to the `127.0.0.1:5328` port, which is where the Flask server is running.
+1. **Planning Phase**: The Planning Agent examines your query along with existing memory abstracts to identify what specific information is needed and determine which search tools are most appropriate (keyword for exact matches, vector for semantic similarity, hybrid for comprehensive coverage, image for visual analysis).
 
-In production, the Flask server is hosted as [Python serverless functions](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python) on Vercel.
+2. **Search Phase**: The Research Agent executes searches in parallel across the page-store using keyword searches for exact entities, vector searches for conceptually related content, hybrid searches combining both approaches with AI reranking, and image searches for query-specific analysis of stored images.
 
-## Demo
+3. **Integration Phase**: The Integrate Agent synthesizes all retrieved information by filtering out irrelevant content, combining facts from multiple sources, and producing a coherent factual summary focused on your query.
 
-https://nextjs-flask-starter.vercel.app/
+4. **Response Generation**: The final integrated context is injected into the AI prompt, enabling informed, accurate responses grounded in your complete conversation history.
 
-## Deploy Your Own
+### Memorization Process
 
-You can clone & deploy it to Vercel with one click:
+When Memorize is enabled, conversations are preserved for future retrieval:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Next.js%20Flask%20Starter&demo-description=Simple%20Next.js%20boilerplate%20that%20uses%20Flask%20as%20the%20API%20backend.&demo-url=https%3A%2F%2Fnextjs-flask-starter.vercel.app%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F795TzKM3irWu6KBCUPpPz%2F44e0c6622097b1eea9b48f732bf75d08%2FCleanShot_2023-05-23_at_12.02.15.png&project-name=Next.js%20Flask%20Starter&repository-name=nextjs-flask-starter&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fnextjs-flask&from=vercel-examples-repo)
+1. **Processing**: Memory Agent receives the conversation and any attached images
+2. **Image Analysis**: Visual content is analyzed using GPT-4 Vision
+3. **Abstract Generation**: AI creates concise summaries highlighting key information
+4. **Dual Storage**: Abstracts stored in memo indexes (fast lightweight search) and full content stored in page indexes (complete detail preservation)
+5. **Embedding**: Content is converted to both dense (semantic) and sparse (keyword) vectors
+6. **Indexing**: All forms are uploaded to Pinecone for future deep research queries
 
-## Developing Locally
+---
 
-You can clone & create this repo with the following command
+## Technology Stack
 
-```bash
-npx create-next-app nextjs-flask --example "https://github.com/vercel/examples/tree/main/python/nextjs-flask"
-```
+### Frontend
+- Next.js 13
+- React 18
+- TypeScript
+- Tailwind CSS + shadcn/ui components
+
+### Backend
+- Python 3.12
+- Flask
+- OpenAI API
+- Pinecone SDK
+- Redis
+- Tenacity
+
+### Agent Implementation
+- **Planning Agent**: Analyzes queries and formulates search strategies
+- **Research Agent**: Executes multi-tool searches with parallel retrieval
+- **Integrate Agent**: Synthesizes evidence into coherent summaries
+- **Memory Agent**: Processes and stores conversations with dual indexing
+
+---
 
 ## Getting Started
 
-First, install the dependencies:
+### Prerequisites
+
+- Node.js 18+ and pnpm
+- Python 3.12
+- uv (Python package manager)
+- Redis server
+- OpenAI API key
+- Pinecone API key
+
+### Installation
+
+Clone the repository:
 
 ```bash
-npm install
-# or
-yarn
-# or
+git clone https://github.com/jkatyan/deep-memory.git
+cd deep-memory
+```
+
+Install frontend dependencies:
+
+```bash
 pnpm install
 ```
 
-Then, run the development server:
+Install backend dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+uv sync
+```
+
+### Running Locally
+
+Start the development server:
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start:
+- Next.js frontend on `http://localhost:3000`
+- Flask backend on `http://127.0.0.1:5328`
 
-The Flask server will be running on [http://127.0.0.1:5328](http://127.0.0.1:5328) – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
+### Usage
 
-## Learn More
+1. Open `http://localhost:3000` in your browser
+2. Enter your OpenAI and Pinecone API keys (stored in Redis with 1-hour expiry)
+3. Start chatting with the AI assistant
+4. Toggle **Research** to retrieve relevant context from past conversations
+5. Toggle **Memorize** to store current conversation for future retrieval
 
-To learn more about Next.js, take a look at the following resources:
+### Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Flask Documentation](https://flask.palletsprojects.com/en/1.1.x/) - learn about Flask features and API.
+Configure the following in your deployment environment:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+REDIS_URL=redis://localhost:6379/0  # Redis connection string
+```
+
+---
+
+## Citation
+
+This implementation is inspired by the **General Agentic Memory (GAM)** framework introduced in:
+
+**"General Agentic Memory Via Deep Research"**  
+B.Y. Yan, Chaofan Li, Hongjin Qian, Shuqi Lu, and Zheng Liu (2025)  
+[arXiv:2511.18423](https://arxiv.org/abs/2511.18423)
