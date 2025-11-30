@@ -66,6 +66,7 @@ const ToggleButton: FC<ToggleButtonProps> = ({ label, icon: Icon, isSelected, on
 
   return (
     <button
+      type="button"
       onClick={onToggle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
