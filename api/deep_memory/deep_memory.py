@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
-from providers import OpenAIProvider, PineconeProvider
-from agents import ResearchAgent, MemoryAgent, IntegrateAgent
-from tools import Tools
+from .providers import OpenAIProvider, PineconeProvider
+from .agents import ResearchAgent, MemoryAgent, IntegrateAgent
+from .tools import Tools
 
 
 #=======================================================================

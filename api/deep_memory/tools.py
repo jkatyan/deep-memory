@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from providers import PineconeProvider, OpenAIProvider
+from .providers import PineconeProvider, OpenAIProvider
 
 
 #=======================================================================
