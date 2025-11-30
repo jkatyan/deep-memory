@@ -47,5 +47,8 @@
     "typescript": "5.0.4",
     "zod": "^4.1.13",
     "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "redis-commander": "^0.9.0"
   }
 }

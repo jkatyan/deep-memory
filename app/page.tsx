@@ -1,15 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
 import { useForm } from "@tanstack/react-form"
 import * as z from "zod"
 import { toast } from "sonner"
 import { Toaster } from "@/components/ui/sonner";
-import { uuid } from "@tanstack/react-form";
 
 export default function Home() {
   const router = useRouter()
@@ -17,11 +16,11 @@ export default function Home() {
   const formSchema = z.object({
     openAi: z
       .string()
-      .length(1),
+      .nonempty(),
     // .length(43),
     pinecone: z
       .string()
-      .length(1),
+      .nonempty(),
     // .length(75),
     awsAccess: z.string().nonempty(),
     awsSecret: z.string().nonempty(),

@@ -32,7 +32,6 @@ const attachmentAdapter: AttachmentAdapter = {
 
 const MyModelAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
-    // TODO replace with your own API
     const result = await fetch("/api/python", {
       method: "POST",
       headers: {
@@ -40,6 +39,7 @@ const MyModelAdapter: ChatModelAdapter = {
       },
       // forward the messages in the chat to the API
       body: JSON.stringify({
+        id: localStorage.getItem("uuid"),
         messages,
       }),
       // if the user hits the "cancel" button or escape keyboard key, cancel the request
