@@ -180,18 +180,27 @@ const ThreadWelcome: FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="aui-thread-welcome-message-motion-1 font-semibold text-2xl dark:text-neutral-50"
+            className="aui-thread-welcome-message-motion-1 font-semibold text-2xl dark:text-neutral-50 text-center"
           >
-            Welcome to Deep Memory!
+            Deep Memory
           </m.div>
           <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ delay: 0.1 }}
-            className="aui-thread-welcome-message-motion-2 text-2xl text-muted-foreground/65 dark:text-neutral-50"
+            className="aui-thread-welcome-message-motion-2 text-sm text-muted-foreground mt-4 text-left max-w-md"
           >
-            How can I help you today?
+            Deep Memory is an agentic long-term memory system for language models. Use Memorize to write the current conversation to memory, and Research to retrieve and analyze stored knowledge.
+          </m.div>
+          <m.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ delay: 0.2 }}
+            className="aui-thread-welcome-message-motion-2 text-sm text-muted-foreground mt-2 text-left max-w-md italic"
+          >
+            Note: Default ChatGPT memory is intentionally disabled so that all long-term context comes exclusively from Deep Memory.
           </m.div>
         </div>
       </div>
