@@ -22,18 +22,18 @@ export default function Home() {
       .string()
       .nonempty(),
     // .length(75),
-    awsAccess: z.string().nonempty(),
-    awsSecret: z.string().nonempty(),
-    awsBucketName: z.string().nonempty()
+    // awsAccess: z.string().nonempty(),
+    // awsSecret: z.string().nonempty(),
+    // awsBucketName: z.string().nonempty()
   })
 
   const form = useForm({
     defaultValues: {
       openAi: "",
       pinecone: "",
-      awsAccess: "",
-      awsSecret: "",
-      awsBucketName: ""
+      // awsAccess: "",
+      // awsSecret: "",
+      // awsBucketName: ""
     },
     validators: {
       onSubmit: formSchema,
@@ -133,6 +133,7 @@ export default function Home() {
           }
 
 
+          {/* 
           {
             form.Field({
               name: "awsAccess",
@@ -225,6 +226,7 @@ export default function Home() {
               },
             })
           }
+          */}
 
           <Field orientation="horizontal">
             <Button type="submit">Submit</Button>

@@ -1,9 +1,10 @@
 "use client"
 
 import { Thread } from "@/components/assistant-ui/thread";
-import { AssistantRuntimeProvider, AttachmentAdapter, ChatModelAdapter, useLocalRuntime } from "@assistant-ui/react";
+import { AssistantRuntimeProvider, /* AttachmentAdapter, */ ChatModelAdapter, useLocalRuntime } from "@assistant-ui/react";
 import { useEffect, useState } from "react";
 
+/*
 const attachmentAdapter: AttachmentAdapter = {
   accept: "image/*,application/pdf",
   async add(file) {
@@ -20,6 +21,7 @@ const attachmentAdapter: AttachmentAdapter = {
       id,
       type: file.type.startsWith("image/") ? "image" : "document",
       name: file.name,
+      contentType: file.type,
       url,
     };
   },
@@ -29,6 +31,7 @@ const attachmentAdapter: AttachmentAdapter = {
     });
   },
 };
+*/
 
 const MyModelAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
@@ -68,7 +71,7 @@ const MyModelAdapter: ChatModelAdapter = {
 };
 
 export default function Chat() {
-  const runtime = useLocalRuntime(MyModelAdapter, { adapters: { attachments: attachmentAdapter } });
+  const runtime = useLocalRuntime(MyModelAdapter /* , { adapters: { attachments: attachmentAdapter } } */ );
 
   const [localUuid, setLocalUuid] = useState("");
 
