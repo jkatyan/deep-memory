@@ -2,6 +2,8 @@
 
 An agentic long-term memory system for language models that enables AI assistants to store, retrieve, and intelligently process conversational context across sessions.
 
+![Deep Memory Interface](deep-memory-interface.png)
+
 **Live Demo:** https://deep-memory.vercel.app/
 
 ## Overview
