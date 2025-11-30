@@ -131,6 +131,7 @@ def post_credentials():
     json_obj = json.loads(decoded)
 
     r.hset(id, mapping=json_obj)
+    r.expire(id, 3600)
 
     res = {"uuid": id}
     return jsonify(isError=False, message="Success", statusCode=200, data=res), 200
