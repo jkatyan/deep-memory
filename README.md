@@ -4,15 +4,11 @@ An agentic long-term memory system for language models that enables AI assistant
 
 **Live Demo:** https://deep-memory.vercel.app/
 
----
-
 ## Overview
 
 Deep Memory extends language models beyond single-session context windows by providing persistent memory capabilities. Unlike traditional memory systems that compress information ahead-of-time (AOT), Deep Memory follows a **just-in-time (JIT) compilation** approach: it maintains complete conversation history in a searchable page-store while performing intensive "deep research" at query time to retrieve and synthesize exactly the information needed.
 
 This design avoids the information loss inherent in pre-compressed memory systems, enabling high-fidelity retrieval and task-adaptive context generation.
-
----
 
 ## Architecture
 
@@ -51,8 +47,6 @@ Performs deep research through three phases:
 - Synthesizes retrieved information into coherent factual summaries
 - Filters and combines facts from multiple sources
 
----
-
 ## How It Works
 
 ### Deep Research Process
@@ -78,8 +72,6 @@ When Memorize is enabled, conversations are preserved for future retrieval:
 5. **Embedding**: Content is converted to both dense (semantic) and sparse (keyword) vectors
 6. **Indexing**: All forms are uploaded to Pinecone for future deep research queries
 
----
-
 ## Technology Stack
 
 ### Frontend
@@ -101,8 +93,6 @@ When Memorize is enabled, conversations are preserved for future retrieval:
 - **Research Agent**: Executes multi-tool searches with parallel retrieval
 - **Integrate Agent**: Synthesizes evidence into coherent summaries
 - **Memory Agent**: Processes and stores conversations with dual indexing
-
----
 
 ## Getting Started
 
@@ -163,8 +153,6 @@ Configure the following in your deployment environment:
 ```bash
 REDIS_URL=redis://localhost:6379/0  # Redis connection string
 ```
-
----
 
 ## Citation
 
