@@ -14,7 +14,7 @@ This design avoids the information loss inherent in pre-compressed memory system
 
 ## Architecture
 
-Deep Memory implements a dual-agent framework with four specialized components:
+Deep Memory implements a dual-agent framework:
 
 ### Memorizer Agent
 
