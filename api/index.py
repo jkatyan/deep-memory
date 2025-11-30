@@ -19,7 +19,7 @@ def call_chatgpt():
     raw = r.hgetall(str(json_obj.get('id')))
     credentials = {k.decode(): v.decode() for k, v in raw.items()}
 
-    client = OpenAI(api_key=credentials["openAi"])
+    client = OpenAI(api_key=credentials["openAi"], timeout=300.0)
     stream = client.responses.create(
         model="gpt-5",
         input=messages[-1]["content"][0]["text"],

@@ -20,6 +20,7 @@ import {
 } from "@assistant-ui/react";
 
 import type { FC } from "react";
+import { useState } from "react";
 import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
 import * as m from "motion/react-m";
 
@@ -34,6 +35,67 @@ import {
 } from "@/components/assistant-ui/attachment";
 
 import { cn } from "@/lib/utils";
+
+// SVG Icons
+const ResearchIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M11.5171 11.9924C11.5171 11.1544 10.8375 10.4749 9.99951 10.4748C9.1614 10.4748 8.48194 11.1543 8.48194 11.9924C8.48204 12.8304 9.16146 13.51 9.99951 13.51C10.8375 13.5099 11.517 12.8304 11.5171 11.9924ZM3.80713 8.71018C3.28699 8.92666 3.01978 9.50634 3.19385 10.0422L3.52686 11.0647L3.56494 11.1653C3.77863 11.6537 4.32351 11.9188 4.84717 11.7717L7.30322 11.0803C7.68362 9.95526 8.74606 9.14475 9.99951 9.14475C10.6946 9.14479 11.3313 9.39406 11.8257 9.80783L13.0933 9.45139L13.0278 9.28049L11.7671 5.40061L3.80713 8.71018ZM14.5962 3.05783L14.4683 3.08615L13.6382 3.35569C13.0705 3.54027 12.7594 4.15025 12.9438 4.71799L14.2935 8.86936L14.3325 8.97287C14.5537 9.47408 15.1235 9.73664 15.6558 9.56369L16.4858 9.29319L16.605 9.24045C16.8285 9.11361 16.9562 8.86404 16.9272 8.60861L16.8999 8.48166L15.2808 3.49924C15.1844 3.20321 14.894 3.02422 14.5962 3.05783ZM12.8472 11.9924C12.8471 12.9213 12.3997 13.7432 11.7114 14.2629L13.6187 17.3137L13.6782 17.4348C13.7863 17.7246 13.6802 18.0603 13.4077 18.2307C13.1352 18.401 12.7869 18.3493 12.5737 18.1252L12.4907 18.0188L10.4761 14.7961C10.3209 14.8223 10.1621 14.84 9.99951 14.8401C9.83597 14.8401 9.67603 14.8226 9.52002 14.7961L7.50635 18.0188L7.42334 18.1252C7.21015 18.3493 6.86184 18.401 6.58936 18.2307C6.27803 18.036 6.1838 17.6251 6.37842 17.3137L8.28467 14.2619C7.72379 13.8376 7.32535 13.2124 7.19776 12.4914L5.20752 13.052C4.03967 13.3804 2.82407 12.7896 2.34717 11.7004L2.26221 11.4758L1.9292 10.4533C1.54076 9.25785 2.13665 7.9642 3.29737 7.48166L11.5884 4.03342C11.7179 3.15622 12.3266 2.38379 13.2271 2.09104L14.0581 1.82053L14.2524 1.76779C15.2307 1.5561 16.2295 2.11668 16.5454 3.08908L18.1646 8.07053L18.2173 8.26584C18.4145 9.17874 17.9401 10.1097 17.0855 10.4865L16.897 10.5588L16.0659 10.8283C15.3549 11.0592 14.6144 10.9419 14.0288 10.5705L12.6499 10.9572C12.7754 11.2783 12.8472 11.6269 12.8472 11.9924Z"></path>
+  </svg>
+);
+
+const MemorizeIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M14.3352 10.0257C14.3352 7.6143 12.391 5.66554 10.0002 5.66537C7.60929 5.66537 5.66528 7.61419 5.66528 10.0257C5.66531 11.5493 6.44221 12.8881 7.61938 13.6683H12.3811C13.558 12.8881 14.3352 11.5491 14.3352 10.0257ZM8.84399 16.9984C9.07459 17.3983 9.50543 17.6683 10.0002 17.6683C10.495 17.6682 10.926 17.3984 11.1565 16.9984H8.84399ZM8.08813 15.6683H11.9114V14.9984H8.08813V15.6683ZM1.66626 9.33529L1.80103 9.34896C2.10381 9.41116 2.3313 9.67914 2.3313 10.0003C2.33115 10.3214 2.10377 10.5896 1.80103 10.6517L1.66626 10.6654H0.833252C0.466091 10.6654 0.168389 10.3674 0.168213 10.0003C0.168213 9.63306 0.465983 9.33529 0.833252 9.33529H1.66626ZM19.1663 9.33529L19.301 9.34896C19.6038 9.41116 19.8313 9.67914 19.8313 10.0003C19.8311 10.3214 19.6038 10.5896 19.301 10.6517L19.1663 10.6654H18.3333C17.9661 10.6654 17.6684 10.3674 17.6682 10.0003C17.6682 9.63306 17.966 9.33529 18.3333 9.33529H19.1663ZM3.0481 3.04818C3.2753 2.82099 3.62593 2.79189 3.88403 2.96224L3.98853 3.04818L4.57739 3.63705L4.66235 3.74154C4.83285 3.99966 4.80464 4.35021 4.57739 4.57748C4.35013 4.80474 3.99958 4.83293 3.74146 4.66244L3.63696 4.57748L3.0481 3.98861L2.96216 3.88412C2.79181 3.62601 2.82089 3.27538 3.0481 3.04818ZM16.012 3.04818C16.2717 2.7886 16.6927 2.78852 16.9524 3.04818C17.2117 3.30786 17.2119 3.72901 16.9524 3.98861L16.3625 4.57748C16.1028 4.83717 15.6818 4.83718 15.4221 4.57748C15.1626 4.31776 15.1625 3.89669 15.4221 3.63705L16.012 3.04818ZM9.33521 1.66634V0.833336C9.33521 0.466067 9.63297 0.168297 10.0002 0.168297C10.3674 0.168472 10.6653 0.466175 10.6653 0.833336V1.66634C10.6653 2.0335 10.3674 2.33121 10.0002 2.33138C9.63297 2.33138 9.33521 2.03361 9.33521 1.66634ZM15.6653 10.0257C15.6653 11.9571 14.7058 13.6634 13.2415 14.6917V16.3333C13.2415 16.7004 12.9444 16.9971 12.5774 16.9974C12.282 18.1473 11.2423 18.9982 10.0002 18.9984C8.75792 18.9984 7.71646 18.1476 7.42114 16.9974C7.05476 16.9964 6.75806 16.7 6.75806 16.3333V14.6917C5.29383 13.6634 4.33523 11.957 4.33521 10.0257C4.33521 6.88608 6.86835 4.33529 10.0002 4.33529C13.132 4.33547 15.6653 6.88618 15.6653 10.0257Z"></path>
+  </svg>
+);
+
+const XIcon: FC<{ className?: string }> = ({ className }) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M11.1152 3.91503C11.3868 3.73594 11.756 3.7658 11.9951 4.00488C12.2341 4.24395 12.264 4.61309 12.0849 4.88476L11.9951 4.99511L8.99018 7.99999L11.9951 11.0049L12.0849 11.1152C12.264 11.3869 12.2341 11.756 11.9951 11.9951C11.756 12.2342 11.3868 12.2641 11.1152 12.085L11.0048 11.9951L7.99995 8.99023L4.99506 11.9951C4.7217 12.2685 4.2782 12.2685 4.00483 11.9951C3.73146 11.7217 3.73146 11.2782 4.00483 11.0049L7.00971 7.99999L4.00483 4.99511L3.91499 4.88476C3.73589 4.61309 3.76575 4.24395 4.00483 4.00488C4.24391 3.7658 4.61305 3.73594 4.88471 3.91503L4.99506 4.00488L7.99995 7.00976L11.0048 4.00488L11.1152 3.91503Z"></path>
+  </svg>
+);
+
+// Toggle button component
+interface ToggleButtonProps {
+  label: string;
+  icon: FC<{ className?: string }>;
+  isSelected: boolean;
+  onToggle: () => void;
+}
+
+const ToggleButton: FC<ToggleButtonProps> = ({ label, icon: Icon, isSelected, onToggle }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <button
+      onClick={onToggle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        "inline-flex items-center gap-2 h-11 rounded-full text-sm font-medium transition-all duration-200",
+        isSelected && isHovered
+          ? "bg-[#303030] text-white pl-2 pr-3"
+          : isSelected
+          ? "text-[#60a5fa] px-3"
+          : "text-white hover:bg-[#303030] px-3"
+      )}
+    >
+      {isHovered && isSelected ? (
+        <>
+          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
+            <XIcon className="w-4 h-4" />
+          </span>
+          <span>{label}</span>
+        </>
+      ) : (
+        <>
+          <Icon className="w-5 h-5 flex-shrink-0" />
+          <span className="leading-none">{label}</span>
+        </>
+      )}
+    </button>
+  );
+};
 
 export const Thread: FC = () => {
   return (
@@ -173,6 +235,9 @@ const ThreadSuggestions: FC = () => {
 };
 
 const Composer: FC = () => {
+  const [isResearchEnabled, setIsResearchEnabled] = useState(false);
+  const [isMemorizeEnabled, setIsMemorizeEnabled] = useState(false);
+
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
       <ComposerPrimitive.AttachmentDropzone className="aui-composer-attachment-dropzone group/input-group flex w-full flex-col rounded-3xl border border-input bg-background px-1 pt-2 shadow-xs outline-none transition-[color,box-shadow] has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-[3px] has-[textarea:focus-visible]:ring-ring/50 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50 dark:bg-background">
@@ -184,16 +249,49 @@ const Composer: FC = () => {
           autoFocus
           aria-label="Message input"
         />
-        <ComposerAction />
+        <ComposerAction 
+          isResearchEnabled={isResearchEnabled}
+          setIsResearchEnabled={setIsResearchEnabled}
+          isMemorizeEnabled={isMemorizeEnabled}
+          setIsMemorizeEnabled={setIsMemorizeEnabled}
+        />
       </ComposerPrimitive.AttachmentDropzone>
     </ComposerPrimitive.Root>
   );
 };
 
-const ComposerAction: FC = () => {
+interface ComposerActionProps {
+  isResearchEnabled: boolean;
+  setIsResearchEnabled: (value: boolean) => void;
+  isMemorizeEnabled: boolean;
+  setIsMemorizeEnabled: (value: boolean) => void;
+}
+
+const ComposerAction: FC<ComposerActionProps> = ({
+  isResearchEnabled,
+  setIsResearchEnabled,
+  isMemorizeEnabled,
+  setIsMemorizeEnabled,
+}) => {
   return (
     <div className="aui-composer-action-wrapper relative mx-1 mt-2 mb-2 flex items-center justify-between">
-      <ComposerAddAttachment />
+      <div className="flex items-center gap-2">
+        {/* <ComposerAddAttachment /> */}
+        
+        <ToggleButton
+          label="Research"
+          icon={ResearchIcon}
+          isSelected={isResearchEnabled}
+          onToggle={() => setIsResearchEnabled(!isResearchEnabled)}
+        />
+        
+        <ToggleButton
+          label="Memorize"
+          icon={MemorizeIcon}
+          isSelected={isMemorizeEnabled}
+          onToggle={() => setIsMemorizeEnabled(!isMemorizeEnabled)}
+        />
+      </div>
 
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.Send asChild>
@@ -213,15 +311,16 @@ const ComposerAction: FC = () => {
 
       <ThreadPrimitive.If running>
         <ComposerPrimitive.Cancel asChild>
-          <Button
+          <TooltipIconButton
+            tooltip="Stop generating"
             type="button"
             variant="default"
             size="icon"
-            className="aui-composer-cancel size-[34px] rounded-full border border-muted-foreground/60 hover:bg-primary/75 dark:border-muted-foreground/90"
+            className="aui-composer-cancel size-[34px] rounded-full p-1 border border-muted-foreground/60 hover:bg-primary/75 dark:border-muted-foreground/90"
             aria-label="Stop generating"
           >
-            <Square className="aui-composer-cancel-icon size-3.5 fill-white dark:fill-black" />
-          </Button>
+            <Square className="aui-composer-cancel-icon size-3 fill-white dark:fill-black" />
+          </TooltipIconButton>
         </ComposerPrimitive.Cancel>
       </ThreadPrimitive.If>
     </div>
