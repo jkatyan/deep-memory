@@ -15,6 +15,10 @@ def call_chatgpt():
 
     json_obj = json.loads(decoded)
     messages = json_obj.get('messages')
+    metadata = json_obj.get('metadata', {})
+    
+    research_enabled = metadata.get('isResearchEnabled', False)
+    memorize_enabled = metadata.get('isMemorizeEnabled', False)
 
     raw = r.hgetall(str(json_obj.get('id')))
     credentials = {k.decode(): v.decode() for k, v in raw.items()}

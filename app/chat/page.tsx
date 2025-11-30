@@ -32,19 +32,28 @@ const attachmentAdapter: AttachmentAdapter = {
 
 const MyModelAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
+    const metadata = (window as any).chatMetadata || {
+      isResearchEnabled: false,
+      isMemorizeEnabled: false,
+    };
+
     const result = await fetch("/api/python", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      // forward the messages in the chat to the API
       body: JSON.stringify({
         id: localStorage.getItem("uuid"),
         messages,
+        metadata: {
+          isResearchEnabled: metadata.isResearchEnabled,
+          isMemorizeEnabled: metadata.isMemorizeEnabled,
+        },
       }),
-      // if the user hits the "cancel" button or escape keyboard key, cancel the request
       signal: abortSignal,
     });
+
+    window.dispatchEvent(new Event('chatMessageSent'));
 
     const data = await result.json();
     return {

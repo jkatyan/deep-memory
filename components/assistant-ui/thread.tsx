@@ -20,7 +20,7 @@ import {
 } from "@assistant-ui/react";
 
 import type { FC } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
 import * as m from "motion/react-m";
 
@@ -36,7 +36,6 @@ import {
 
 import { cn } from "@/lib/utils";
 
-// SVG Icons
 const ResearchIcon: FC<{ className?: string }> = ({ className }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
     <path d="M11.5171 11.9924C11.5171 11.1544 10.8375 10.4749 9.99951 10.4748C9.1614 10.4748 8.48194 11.1543 8.48194 11.9924C8.48204 12.8304 9.16146 13.51 9.99951 13.51C10.8375 13.5099 11.517 12.8304 11.5171 11.9924ZM3.80713 8.71018C3.28699 8.92666 3.01978 9.50634 3.19385 10.0422L3.52686 11.0647L3.56494 11.1653C3.77863 11.6537 4.32351 11.9188 4.84717 11.7717L7.30322 11.0803C7.68362 9.95526 8.74606 9.14475 9.99951 9.14475C10.6946 9.14479 11.3313 9.39406 11.8257 9.80783L13.0933 9.45139L13.0278 9.28049L11.7671 5.40061L3.80713 8.71018ZM14.5962 3.05783L14.4683 3.08615L13.6382 3.35569C13.0705 3.54027 12.7594 4.15025 12.9438 4.71799L14.2935 8.86936L14.3325 8.97287C14.5537 9.47408 15.1235 9.73664 15.6558 9.56369L16.4858 9.29319L16.605 9.24045C16.8285 9.11361 16.9562 8.86404 16.9272 8.60861L16.8999 8.48166L15.2808 3.49924C15.1844 3.20321 14.894 3.02422 14.5962 3.05783ZM12.8472 11.9924C12.8471 12.9213 12.3997 13.7432 11.7114 14.2629L13.6187 17.3137L13.6782 17.4348C13.7863 17.7246 13.6802 18.0603 13.4077 18.2307C13.1352 18.401 12.7869 18.3493 12.5737 18.1252L12.4907 18.0188L10.4761 14.7961C10.3209 14.8223 10.1621 14.84 9.99951 14.8401C9.83597 14.8401 9.67603 14.8226 9.52002 14.7961L7.50635 18.0188L7.42334 18.1252C7.21015 18.3493 6.86184 18.401 6.58936 18.2307C6.27803 18.036 6.1838 17.6251 6.37842 17.3137L8.28467 14.2619C7.72379 13.8376 7.32535 13.2124 7.19776 12.4914L5.20752 13.052C4.03967 13.3804 2.82407 12.7896 2.34717 11.7004L2.26221 11.4758L1.9292 10.4533C1.54076 9.25785 2.13665 7.9642 3.29737 7.48166L11.5884 4.03342C11.7179 3.15622 12.3266 2.38379 13.2271 2.09104L14.0581 1.82053L14.2524 1.76779C15.2307 1.5561 16.2295 2.11668 16.5454 3.08908L18.1646 8.07053L18.2173 8.26584C18.4145 9.17874 17.9401 10.1097 17.0855 10.4865L16.897 10.5588L16.0659 10.8283C15.3549 11.0592 14.6144 10.9419 14.0288 10.5705L12.6499 10.9572C12.7754 11.2783 12.8472 11.6269 12.8472 11.9924Z"></path>
@@ -55,7 +54,6 @@ const XIcon: FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-// Toggle button component
 interface ToggleButtonProps {
   label: string;
   icon: FC<{ className?: string }>;
@@ -98,6 +96,26 @@ const ToggleButton: FC<ToggleButtonProps> = ({ label, icon: Icon, isSelected, on
 };
 
 export const Thread: FC = () => {
+  const [isResearchEnabled, setIsResearchEnabled] = useState(false);
+  const [isMemorizeEnabled, setIsMemorizeEnabled] = useState(false);
+
+  if (typeof window !== 'undefined') {
+    (window as any).chatMetadata = {
+      isResearchEnabled,
+      isMemorizeEnabled,
+    };
+  }
+
+  useEffect(() => {
+    const handleReset = () => {
+      setIsResearchEnabled(false);
+      setIsMemorizeEnabled(false);
+    };
+
+    window.addEventListener('chatMessageSent', handleReset);
+    return () => window.removeEventListener('chatMessageSent', handleReset);
+  }, []);
+
   return (
     <LazyMotion features={domAnimation}>
       <MotionConfig reducedMotion="user">
@@ -125,7 +143,12 @@ export const Thread: FC = () => {
 
             <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-4 flex w-full max-w-[var(--thread-max-width)] flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
               <ThreadScrollToBottom />
-              <Composer />
+              <Composer 
+                isResearchEnabled={isResearchEnabled}
+                setIsResearchEnabled={setIsResearchEnabled}
+                isMemorizeEnabled={isMemorizeEnabled}
+                setIsMemorizeEnabled={setIsMemorizeEnabled}
+              />
             </ThreadPrimitive.ViewportFooter>
           </ThreadPrimitive.Viewport>
         </ThreadPrimitive.Root>
@@ -234,10 +257,19 @@ const ThreadSuggestions: FC = () => {
   );
 };
 
-const Composer: FC = () => {
-  const [isResearchEnabled, setIsResearchEnabled] = useState(false);
-  const [isMemorizeEnabled, setIsMemorizeEnabled] = useState(false);
+interface ComposerProps {
+  isResearchEnabled: boolean;
+  setIsResearchEnabled: (value: boolean) => void;
+  isMemorizeEnabled: boolean;
+  setIsMemorizeEnabled: (value: boolean) => void;
+}
 
+const Composer: FC<ComposerProps> = ({
+  isResearchEnabled,
+  setIsResearchEnabled,
+  isMemorizeEnabled,
+  setIsMemorizeEnabled,
+}) => {
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
       <ComposerPrimitive.AttachmentDropzone className="aui-composer-attachment-dropzone group/input-group flex w-full flex-col rounded-3xl border border-input bg-background px-1 pt-2 shadow-xs outline-none transition-[color,box-shadow] has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-[3px] has-[textarea:focus-visible]:ring-ring/50 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50 dark:bg-background">
@@ -276,8 +308,6 @@ const ComposerAction: FC<ComposerActionProps> = ({
   return (
     <div className="aui-composer-action-wrapper relative mx-1 mt-2 mb-2 flex items-center justify-between">
       <div className="flex items-center gap-2">
-        {/* <ComposerAddAttachment /> */}
-        
         <ToggleButton
           label="Research"
           icon={ResearchIcon}
