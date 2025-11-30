@@ -52,7 +52,7 @@ const useAttachmentSrc = () => {
     useShallow(({ attachment }): { file?: File; src?: string } => {
       if (attachment.type !== "image") return {};
       if (attachment.file) return { file: attachment.file };
-      const src = attachment.content?.filter((c) => c.type === "image")[0]
+      const src = (attachment.content?.filter((c) => c.type === "image")[0] as any)
         ?.image;
       if (!src) return {};
       return { src };
@@ -85,10 +85,10 @@ const AttachmentPreview: FC<AttachmentPreviewProps> = ({ src }) => {
   );
 };
 
-const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
+const AttachmentPreviewDialog = ({ children }: PropsWithChildren) => {
   const src = useAttachmentSrc();
 
-  if (!src) return children;
+  if (!src) return <>{children}</>;
 
   return (
     <Dialog>
