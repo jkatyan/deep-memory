@@ -42,7 +42,7 @@ Performs deep research through three phases:
 - Selects optimal search strategies (keyword, vector, hybrid, or image)
 
 **Searching**
-- Executes planned searches in parallel across the page-store
+- Executes planned searches across the page-store
 - Retrieves relevant conversations using multiple search modalities
 
 **Integration**
@@ -57,7 +57,7 @@ When Research is enabled, the system performs intensive just-in-time retrieval:
 
 1. **Planning Phase**: The Planning Agent examines your query along with existing memory abstracts to identify what specific information is needed and determine which search tools are most appropriate (keyword for exact matches, vector for semantic similarity, hybrid for comprehensive coverage, image for visual analysis).
 
-2. **Search Phase**: The Research Agent executes searches in parallel across the page-store using keyword searches for exact entities, vector searches for conceptually related content, hybrid searches combining both approaches with AI reranking, and image searches for query-specific analysis of stored images.
+2. **Search Phase**: The Research Agent executes searches across the page-store using keyword searches for exact entities, vector searches for conceptually related content, hybrid searches combining both approaches with AI reranking, and image searches for query-specific analysis of stored images.
 
 3. **Integration Phase**: The Integrate Agent synthesizes all retrieved information by filtering out irrelevant content, combining facts from multiple sources, and producing a coherent factual summary focused on your query.
 
