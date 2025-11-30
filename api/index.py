@@ -5,6 +5,9 @@ import redis
 import uuid
 import os
 from textwrap import dedent
+
+# Import DeepMemory module
+sys.path.insert(0, os.path.dirname(__file__))
 from deep_memory import DeepMemory
 
 
