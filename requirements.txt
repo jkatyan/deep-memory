@@ -1,5 +1,0 @@
-Flask==3.0.3
-openai==2.8.1
-tenacity==9.1.2
-pinecone==8.0.0
-redis==7.1.0

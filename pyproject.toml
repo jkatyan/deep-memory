@@ -1,0 +1,13 @@
+[project]
+name = "deep-memory"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask==3.0.3",
+    "openai==2.8.1",
+    "pinecone==8.0.0",
+    "redis==7.1.0",
+    "tenacity==9.1.2",
+]
